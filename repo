@@ -1,0 +1,4 @@
+git clone https://github.com/your-username/rim-designer-app.git
+git add .
+git commit -m "Initial commit: project structure"
+git push origin main
