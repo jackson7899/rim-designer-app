@@ -1,3 +1,0 @@
-npx create-expo-app client
-cd client
-npm install @react-navigation/native react-native-gesture-handler react-native-reanimated react-native-screens three
