@@ -1,0 +1,33 @@
+import SwiftUI
+
+struct ScanView: View {
+    @EnvironmentObject var ble: BLEManager
+
+    var body: some View {
+        VStack(spacing: 20) {
+            Text("Bluetooth Status: \(ble.connectionStatus)")
+                .font(.headline)
+                .padding()
+
+            if ble.connectedDevice == nil {
+                Button("Start Scan") {
+                    ble.startScan()
+                }
+                .font(.title2)
+                .padding()
+            } else {
+                Text("Connected to: \(ble.connectedDevice?.name ?? "Unknown")")
+                    .padding()
+
+                Button("Disconnect") {
+                    if let dev = ble.connectedDevice {
+                        ble.central.cancelPeripheralConnection(dev)
+                    }
+                }
+                .foregroundColor(.red)
+                .padding()
+            }
+        }
+        .padding()
+    }
+}
