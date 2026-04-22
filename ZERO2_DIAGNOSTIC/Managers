@@ -1,0 +1,78 @@
+BLEManager.swift
+import Foundation
+import CoreBluetooth
+
+class BLEManager: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeripheralDelegate {
+    @Published var isPoweredOn = false
+    @Published var connectedDevice: CBPeripheral?
+    @Published var connectionStatus: String = "Disconnected"
+
+    private var central: CBCentralManager!
+
+    override init() {
+        super.init()
+        central = CBCentralManager(delegate: self, queue: .main)
+    }
+
+    // MARK: - Bluetooth Power
+    func centralManagerDidUpdateState(_ central: CBCentralManager) {
+        isPoweredOn = (central.state == .poweredOn)
+        if !isPoweredOn {
+            connectionStatus = "Bluetooth Off"
+        }
+    }
+
+    // MARK: - Scan
+    func startScan() {
+        connectionStatus = "Scanning..."
+        central.scanForPeripherals(withServices: nil)
+    }
+
+    func stopScan() {
+        central.stopScan()
+        connectionStatus = "Scan stopped"
+    }
+
+    // MARK: - Found Device
+    func centralManager(_ central: CBCentralManager,
+                        didDiscover peripheral: CBPeripheral,
+                        advertisementData: [String : Any],
+                        rssi RSSI: NSNumber) {
+
+        if peripheral.name?.contains("OBD") == true ||
+           peripheral.name?.contains("OBDLink") == true {
+            connect(to: peripheral)
+        }
+    }
+
+    // MARK: - Connect
+    func connect(to device: CBPeripheral) {
+        central.stopScan()
+        connectedDevice = device
+        connectionStatus = "Connecting..."
+        central.connect(device)
+    }
+
+    func centralManager(_ central: CBCentralManager,
+                        didConnect peripheral: CBPeripheral) {
+
+        connectedDevice = peripheral
+        peripheral.delegate = self
+        connectionStatus = "Connected"
+    }
+
+    func centralManager(_ central: CBCentralManager,
+                        didFailToConnect peripheral: CBPeripheral,
+                        error: Error?) {
+
+        connectionStatus = "Failed to connect"
+    }
+
+    func centralManager(_ central: CBCentralManager,
+                        didDisconnectPeripheral peripheral: CBPeripheral,
+                        error: Error?) {
+
+        connectedDevice = nil
+        connectionStatus = "Disconnected"
+    }
+}
