@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" 
+"http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>CFBundleName</key>
+    <string>ZERO2_DIAGNOSTIC</string>
+
+    <key>MinimumOSVersion</key>
+    <string>17.0</string>
+
+    <key>NSBluetoothAlwaysUsageDescription</key>
+    <string>The app requires Bluetooth to connect to OBD-II devices.</string>
+
+    <key>UIRequiresFullScreen</key>
+    <true/>
+</dict>
+</plist>
